@@ -16,7 +16,320 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 500);
         }
     }, 1500);
+    
+    // Initialize interactive canvas animation
+    initCanvasAnimation();
 });
+
+// Interactive Canvas Animation
+function initCanvasAnimation() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let mouse = { x: null, y: null, radius: 150 };
+    let animationFrame;
+    
+    // Set canvas size
+    function setCanvasSize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    setCanvasSize();
+    
+    // Particle class
+    class Particle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 3 + 1;
+            this.baseX = this.x;
+            this.baseY = this.y;
+            this.density = (Math.random() * 30) + 1;
+            this.vx = Math.random() * 2 - 1;
+            this.vy = Math.random() * 2 - 1;
+            this.color = `rgba(${139 + Math.random() * 50}, ${92 + Math.random() * 50}, ${246 + Math.random() * 50}, ${0.3 + Math.random() * 0.5})`;
+            this.pulse = Math.random() * Math.PI * 2;
+            this.pulseSpeed = 0.02 + Math.random() * 0.02;
+        }
+        
+        draw() {
+            // Pulsing size effect
+            this.pulse += this.pulseSpeed;
+            const pulseSize = this.size + Math.sin(this.pulse) * 0.5;
+            
+            // Gradient for particle
+            const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, pulseSize * 2);
+            gradient.addColorStop(0, this.color.replace(/[\d.]+\)/, '1)'));
+            gradient.addColorStop(0.5, this.color);
+            gradient.addColorStop(1, this.color.replace(/[\d.]+\)/, '0)'));
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, pulseSize, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Add glow effect
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = this.color.replace(/[\d.]+\)/, '0.8)');
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+        
+        update() {
+            // Calculate distance from mouse
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            let forceDirectionX = dx / distance;
+            let forceDirectionY = dy / distance;
+            let maxDistance = mouse.radius;
+            let force = (maxDistance - distance) / maxDistance;
+            let directionX = forceDirectionX * force * this.density;
+            let directionY = forceDirectionY * force * this.density;
+            
+            if (distance < mouse.radius) {
+                this.x -= directionX;
+                this.y -= directionY;
+            } else {
+                if (this.x !== this.baseX) {
+                    let dx = this.x - this.baseX;
+                    this.x -= dx / 10;
+                }
+                if (this.y !== this.baseY) {
+                    let dy = this.y - this.baseY;
+                    this.y -= dy / 10;
+                }
+            }
+            
+            // Add floating motion
+            this.x += this.vx * 0.5;
+            this.y += this.vy * 0.5;
+            
+            // Bounce off edges
+            if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+            if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
+        }
+    }
+    
+    // Create particles
+    function init() {
+        particles = [];
+        let numberOfParticles = (canvas.width * canvas.height) / 12000;
+        numberOfParticles = Math.min(numberOfParticles, 150); // Increased limit for richer effect
+        
+        for (let i = 0; i < numberOfParticles; i++) {
+            let x = Math.random() * canvas.width;
+            let y = Math.random() * canvas.height;
+            particles.push(new Particle(x, y));
+        }
+    }
+    
+    // Connect particles with lines
+    function connect() {
+        let opacityValue = 1;
+        for (let a = 0; a < particles.length; a++) {
+            for (let b = a + 1; b < particles.length; b++) {
+                let dx = particles[a].x - particles[b].x;
+                let dy = particles[a].y - particles[b].y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 120) {
+                    opacityValue = 1 - (distance / 120);
+                    
+                    // Create gradient for connection lines
+                    const gradient = ctx.createLinearGradient(
+                        particles[a].x, particles[a].y,
+                        particles[b].x, particles[b].y
+                    );
+                    gradient.addColorStop(0, `rgba(236, 72, 153, ${opacityValue * 0.3})`);
+                    gradient.addColorStop(0.5, `rgba(139, 92, 246, ${opacityValue * 0.4})`);
+                    gradient.addColorStop(1, `rgba(249, 115, 22, ${opacityValue * 0.3})`);
+                    
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = opacityValue * 2;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[a].x, particles[a].y);
+                    ctx.lineTo(particles[b].x, particles[b].y);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+    
+    // Animation loop
+    function animate() {
+        // Create trail effect
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+        }
+        
+        connect();
+        
+        // Draw mouse interaction circle
+        if (mouse.x && mouse.y) {
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, mouse.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(236, 72, 153, 0.1)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, mouse.radius * 0.7, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.1)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+        
+        animationFrame = requestAnimationFrame(animate);
+    }
+    
+    // Click ripple effects
+    const ripples = [];
+    
+    class Ripple {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.radius = 0;
+            this.maxRadius = 300;
+            this.speed = 8;
+            this.opacity = 1;
+        }
+        
+        update() {
+            this.radius += this.speed;
+            this.opacity = 1 - (this.radius / this.maxRadius);
+            return this.radius < this.maxRadius;
+        }
+        
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(236, 72, 153, ${this.opacity * 0.5})`;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius * 0.7, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(139, 92, 246, ${this.opacity * 0.3})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    }
+    
+    // Enhanced animation loop with ripples
+    const originalAnimate = animate;
+    animate = function() {
+        // Create trail effect
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+        }
+        
+        connect();
+        
+        // Draw and update ripples
+        for (let i = ripples.length - 1; i >= 0; i--) {
+            if (!ripples[i].update()) {
+                ripples.splice(i, 1);
+            } else {
+                ripples[i].draw();
+            }
+        }
+        
+        // Draw mouse interaction circle
+        if (mouse.x && mouse.y) {
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, mouse.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(236, 72, 153, 0.1)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, mouse.radius * 0.7, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.1)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+        
+        animationFrame = requestAnimationFrame(animate);
+    };
+    
+    // Mouse events
+    const heroSection = document.querySelector('.hero-section');
+    
+    heroSection.addEventListener('mousemove', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = event.clientX - rect.left;
+        mouse.y = event.clientY - rect.top;
+    });
+    
+    // Click event for ripples
+    heroSection.addEventListener('click', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        ripples.push(new Ripple(x, y));
+        
+        // Create particle burst on click
+        for (let i = 0; i < 10; i++) {
+            const angle = (Math.PI * 2 / 10) * i;
+            const burstX = x + Math.cos(angle) * 20;
+            const burstY = y + Math.sin(angle) * 20;
+            particles.push(new Particle(burstX, burstY));
+        }
+        
+        // Remove oldest particles if too many
+        if (particles.length > 200) {
+            particles.splice(0, 10);
+        }
+    });
+    
+    heroSection.addEventListener('mouseleave', function() {
+        mouse.x = null;
+        mouse.y = null;
+    });
+    
+    // Touch events for mobile
+    heroSection.addEventListener('touchmove', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = event.touches[0];
+        mouse.x = touch.clientX - rect.left;
+        mouse.y = touch.clientY - rect.top;
+    });
+    
+    heroSection.addEventListener('touchend', function() {
+        mouse.x = null;
+        mouse.y = null;
+    });
+    
+    // Resize event
+    window.addEventListener('resize', function() {
+        setCanvasSize();
+        init();
+    });
+    
+    // Initialize and start animation
+    init();
+    animate();
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', function() {
+        if (animationFrame) {
+            cancelAnimationFrame(animationFrame);
+        }
+    });
+}
 
 // Navbar scroll effect
 let lastScroll = 0;

@@ -125,6 +125,9 @@ app.get('/', (c) => {
     
     <!-- Hero Section -->
     <section id="home" class="hero-section relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <!-- Interactive Canvas Animation -->
+        <canvas id="hero-canvas" class="absolute inset-0 w-full h-full"></canvas>
+        
         <!-- Animated Background -->
         <div class="animated-background absolute inset-0">
             <div class="floating-shapes">
