@@ -49,7 +49,17 @@ function initCanvasAnimation() {
             this.density = (Math.random() * 30) + 1;
             this.vx = Math.random() * 2 - 1;
             this.vy = Math.random() * 2 - 1;
-            this.color = `rgba(${139 + Math.random() * 50}, ${92 + Math.random() * 50}, ${246 + Math.random() * 50}, ${0.3 + Math.random() * 0.5})`;
+            // Use website color scheme: purple (#8b5cf6), pink (#ec4899), indigo (#6366f1)
+            const colors = [
+                { r: 139, g: 92, b: 246 },   // Purple
+                { r: 236, g: 72, b: 153 },   // Pink
+                { r: 99, g: 102, b: 241 },   // Indigo
+                { r: 168, g: 85, b: 247 },   // Purple-500
+                { r: 244, g: 114, b: 182 }   // Pink-400
+            ];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const opacity = 0.3 + Math.random() * 0.4;
+            this.color = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
             this.pulse = Math.random() * Math.PI * 2;
             this.pulseSpeed = 0.02 + Math.random() * 0.02;
         }
@@ -59,9 +69,9 @@ function initCanvasAnimation() {
             this.pulse += this.pulseSpeed;
             const pulseSize = this.size + Math.sin(this.pulse) * 0.5;
             
-            // Gradient for particle
+            // Gradient for particle with consistent colors
             const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, pulseSize * 2);
-            gradient.addColorStop(0, this.color.replace(/[\d.]+\)/, '1)'));
+            gradient.addColorStop(0, this.color.replace(/[\d.]+\)/, '0.8)'));
             gradient.addColorStop(0.5, this.color);
             gradient.addColorStop(1, this.color.replace(/[\d.]+\)/, '0)'));
             
@@ -71,9 +81,9 @@ function initCanvasAnimation() {
             ctx.closePath();
             ctx.fill();
             
-            // Add glow effect
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = this.color.replace(/[\d.]+\)/, '0.8)');
+            // Add glow effect with purple/pink tint
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = this.color.replace(/[\d.]+\)/, '0.6)');
             ctx.fill();
             ctx.shadowBlur = 0;
         }
@@ -139,14 +149,14 @@ function initCanvasAnimation() {
                 if (distance < 120) {
                     opacityValue = 1 - (distance / 120);
                     
-                    // Create gradient for connection lines
+                    // Create gradient for connection lines using website colors
                     const gradient = ctx.createLinearGradient(
                         particles[a].x, particles[a].y,
                         particles[b].x, particles[b].y
                     );
-                    gradient.addColorStop(0, `rgba(236, 72, 153, ${opacityValue * 0.3})`);
-                    gradient.addColorStop(0.5, `rgba(139, 92, 246, ${opacityValue * 0.4})`);
-                    gradient.addColorStop(1, `rgba(249, 115, 22, ${opacityValue * 0.3})`);
+                    gradient.addColorStop(0, `rgba(139, 92, 246, ${opacityValue * 0.3})`);
+                    gradient.addColorStop(0.5, `rgba(99, 102, 241, ${opacityValue * 0.4})`);
+                    gradient.addColorStop(1, `rgba(236, 72, 153, ${opacityValue * 0.3})`);
                     
                     ctx.strokeStyle = gradient;
                     ctx.lineWidth = opacityValue * 2;
@@ -172,17 +182,26 @@ function initCanvasAnimation() {
         
         connect();
         
-        // Draw mouse interaction circle
+        // Draw mouse interaction circle with website colors
         if (mouse.x && mouse.y) {
+            // Outer circle - Purple
             ctx.beginPath();
             ctx.arc(mouse.x, mouse.y, mouse.radius, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(236, 72, 153, 0.1)';
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.15)';
             ctx.lineWidth = 2;
             ctx.stroke();
             
+            // Middle circle - Indigo
             ctx.beginPath();
             ctx.arc(mouse.x, mouse.y, mouse.radius * 0.7, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(139, 92, 246, 0.1)';
+            ctx.strokeStyle = 'rgba(99, 102, 241, 0.15)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            
+            // Inner circle - Pink
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, mouse.radius * 0.4, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(236, 72, 153, 0.15)';
             ctx.lineWidth = 1;
             ctx.stroke();
         }
@@ -210,16 +229,25 @@ function initCanvasAnimation() {
         }
         
         draw() {
+            // Outer ripple - Purple
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(236, 72, 153, ${this.opacity * 0.5})`;
+            ctx.strokeStyle = `rgba(139, 92, 246, ${this.opacity * 0.5})`;
             ctx.lineWidth = 3;
             ctx.stroke();
             
+            // Middle ripple - Indigo
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius * 0.7, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(139, 92, 246, ${this.opacity * 0.3})`;
+            ctx.strokeStyle = `rgba(99, 102, 241, ${this.opacity * 0.4})`;
             ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Inner ripple - Pink
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius * 0.4, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(236, 72, 153, ${this.opacity * 0.3})`;
+            ctx.lineWidth = 1.5;
             ctx.stroke();
         }
     }
@@ -247,17 +275,26 @@ function initCanvasAnimation() {
             }
         }
         
-        // Draw mouse interaction circle
+        // Draw mouse interaction circle with website colors
         if (mouse.x && mouse.y) {
+            // Outer circle - Purple
             ctx.beginPath();
             ctx.arc(mouse.x, mouse.y, mouse.radius, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(236, 72, 153, 0.1)';
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.15)';
             ctx.lineWidth = 2;
             ctx.stroke();
             
+            // Middle circle - Indigo
             ctx.beginPath();
             ctx.arc(mouse.x, mouse.y, mouse.radius * 0.7, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(139, 92, 246, 0.1)';
+            ctx.strokeStyle = 'rgba(99, 102, 241, 0.15)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            
+            // Inner circle - Pink
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, mouse.radius * 0.4, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(236, 72, 153, 0.15)';
             ctx.lineWidth = 1;
             ctx.stroke();
         }
