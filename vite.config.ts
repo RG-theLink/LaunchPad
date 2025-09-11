@@ -10,5 +10,18 @@ export default defineConfig({
       adapter,
       entry: 'src/index.tsx'
     })
-  ]
+  ],
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        format: 'es'
+      }
+    }
+  },
+  server: {
+    port: 3000,
+    host: '0.0.0.0'
+  }
 })
