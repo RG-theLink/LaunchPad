@@ -144,7 +144,7 @@ app.get('/', (c) => {
                     WEBSITE BUILDING SERVICE
                 </h1>
                 <p class="hero-subtitle text-xl md:text-2xl text-gray-200 mb-8" data-aos="fade-up" data-aos-delay="100">
-                    Get a Full-Life-Cycle Professional Web Presence Online in Just One Week
+                    Get a Full-Life-Cycle Professional Web Presence Online in Just 3-7 Days
                 </p>
                 <div class="hero-cta" data-aos="fade-up" data-aos-delay="200">
                     <a href="#inquiry-form" class="btn-get-started inline-block bg-gradient-to-r from-pink-500 to-orange-500 text-white px-10 py-5 rounded-full text-xl font-bold hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
@@ -155,11 +155,11 @@ app.get('/', (c) => {
                 <div class="mt-12 flex justify-center space-x-8 text-white" data-aos="fade-up" data-aos-delay="300">
                     <div class="text-center">
                         <i class="fas fa-check-circle text-3xl mb-2 text-green-400"></i>
-                        <p class="font-semibold">7-Day Delivery</p>
+                        <p class="font-semibold">3-7 Day Delivery</p>
                     </div>
                     <div class="text-center">
                         <i class="fas fa-shield-alt text-3xl mb-2 text-green-400"></i>
-                        <p class="font-semibold">N$3500 Guaranteed</p>
+                        <p class="font-semibold">N$3500 / $200 USD</p>
                     </div>
                     <div class="text-center">
                         <i class="fas fa-headset text-3xl mb-2 text-green-400"></i>
@@ -187,7 +187,7 @@ app.get('/', (c) => {
                 </p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="feature-cards-grid">
                 <!-- Feature Card 1 -->
                 <div class="feature-card bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
                     <div class="feature-icon bg-gradient-to-br from-purple-500 to-pink-500 text-white w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto">
@@ -245,10 +245,10 @@ app.get('/', (c) => {
                 <!-- Feature Card 7 -->
                 <div class="feature-card bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="700">
                     <div class="feature-icon bg-gradient-to-br from-pink-500 to-rose-500 text-white w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto">
-                        <i class="fas fa-cogs text-2xl"></i>
+                        <i class="fas fa-headset text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 text-center">CMS & Support</h3>
-                    <p class="text-gray-600 text-center">Easy content management system and technical support included</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 text-center">3 Months Support</h3>
+                    <p class="text-gray-600 text-center">Full technical support included for 3 months during your free hosting period</p>
                 </div>
                 
                 <!-- Feature Card 8 -->
@@ -289,22 +289,23 @@ app.get('/', (c) => {
                 <div class="pricing-card bg-white rounded-3xl shadow-2xl overflow-hidden relative" data-aos="zoom-in" data-aos-delay="200">
                     <!-- Special Offer Banner -->
                     <div class="special-offer-banner absolute top-0 right-0 bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-2 rounded-bl-2xl">
-                        <span class="text-sm font-bold">SPECIAL OFFER - Valid Until October 2025</span>
+                        <span class="text-sm font-bold">SPECIAL OFFER - Valid Until November 30th</span>
                     </div>
                     
                     <div class="p-12">
                         <div class="text-center mb-8">
                             <h3 class="text-3xl font-bold text-gray-900 mb-4">Complete Website Package</h3>
                             <div class="price-display">
-                                <span class="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">N$3,500</span>
-                                <p class="text-xl text-gray-600 mt-2">GUARANTEED</p>
+                                <span class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">N$3,500</span>
+                                <p class="text-2xl text-gray-700 mt-2 font-semibold">or $200 USD</p>
+                                <p class="text-lg text-gray-600 mt-1">GUARANTEED PRICE</p>
                             </div>
                         </div>
                         
                         <div class="flex items-center justify-center mb-8">
                             <div class="bg-green-100 text-green-800 px-6 py-3 rounded-full flex items-center">
                                 <i class="fas fa-clock mr-2"></i>
-                                <span class="font-semibold">Up & Running Within 1 Week</span>
+                                <span class="font-semibold">Up & Running Within 3-7 Days</span>
                             </div>
                         </div>
                         
@@ -331,7 +332,7 @@ app.get('/', (c) => {
                             </li>
                             <li class="flex items-start">
                                 <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
-                                <span class="text-gray-700">Content Management System</span>
+                                <span class="text-gray-700">3 Months Technical Support</span>
                             </li>
                             <li class="flex items-start">
                                 <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
@@ -579,7 +580,7 @@ app.get('/', (c) => {
             <div class="border-t border-gray-800 mt-8 pt-8 text-center">
                 <p class="text-gray-400">
                     © 2025 LaunchPad. All rights reserved. | 
-                    <span class="text-pink-500 font-semibold">Special Offer Valid Until October 2025</span>
+                    <span class="text-pink-500 font-semibold">Special Offer Valid Until November 30th</span>
                 </p>
             </div>
         </div>

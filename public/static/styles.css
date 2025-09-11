@@ -196,6 +196,10 @@
 .feature-card {
     position: relative;
     overflow: hidden;
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+    border: 1px solid rgba(139, 92, 246, 0.1);
+    animation: float-card 4s ease-in-out infinite;
+    animation-delay: calc(var(--card-index) * 0.2s);
 }
 
 .feature-card::before {
@@ -209,12 +213,47 @@
     transition: left 0.5s ease;
 }
 
+.feature-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(139, 92, 246, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.feature-card:hover::after {
+    opacity: 1;
+}
+
 .feature-card:hover::before {
     left: 100%;
 }
 
+.feature-card:hover {
+    border-color: rgba(139, 92, 246, 0.3);
+    animation-play-state: paused;
+}
+
 .feature-icon {
-    animation: pulse 2s infinite;
+    animation: pulse 2s infinite, rotate-slow 8s linear infinite;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+}
+
+.feature-card:hover .feature-icon {
+    animation: pulse 0.5s infinite, rotate-fast 1s linear infinite;
+    transform: scale(1.1);
+    box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5);
+}
+
+@keyframes rotate-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes rotate-fast {
+    0% { transform: rotate(0deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1.1); }
 }
 
 @keyframes pulse {
@@ -232,16 +271,28 @@
 /* Pricing Card */
 .pricing-card {
     position: relative;
-    background: white;
-    animation: float-card 3s ease-in-out infinite;
+    background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+    animation: float-card 3s ease-in-out infinite, glow-pulse 4s ease-in-out infinite;
+    box-shadow: 0 10px 40px rgba(139, 92, 246, 0.2);
+}
+
+.pricing-card:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
 }
 
 @keyframes float-card {
     0%, 100% {
-        transform: translateY(0);
+        transform: translateY(0) rotateX(0deg);
+    }
+    25% {
+        transform: translateY(-5px) rotateX(1deg);
     }
     50% {
-        transform: translateY(-10px);
+        transform: translateY(-10px) rotateX(0deg);
+    }
+    75% {
+        transform: translateY(-5px) rotateX(-1deg);
     }
 }
 
@@ -467,6 +518,51 @@ html {
 .card-hover:hover {
     transform: translateY(-5px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* 3D Card Effect */
+.feature-card {
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px) rotateY(5deg) rotateX(-5deg);
+}
+
+/* Gradient Animation for Icons */
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.feature-icon {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite, pulse 2s infinite;
+}
+
+/* Card Entry Animation */
+@keyframes card-entry {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.feature-card {
+    animation: card-entry 0.6s ease-out forwards, float-card 4s ease-in-out infinite;
+    animation-delay: calc(var(--card-index) * 0.1s), calc(var(--card-index) * 0.1s + 0.6s);
 }
 
 /* Animated Border */

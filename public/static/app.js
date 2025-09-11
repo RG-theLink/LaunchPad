@@ -233,6 +233,25 @@ document.querySelectorAll('button, .btn-get-started, .btn-consultation, .btn-cta
     });
 });
 
+// Add 3D tilt effect to feature cards
+document.querySelectorAll('.feature-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 10;
+        const rotateY = (centerX - x) / 10;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+    });
+    
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+    });
+});
+
 // Parallax effect for hero section
 window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
@@ -283,8 +302,13 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe elements
-document.querySelectorAll('.feature-card, .step-card, .pricing-card').forEach(el => {
+// Observe elements and add card index for staggered animations
+document.querySelectorAll('.feature-card').forEach((el, index) => {
+    el.style.setProperty('--card-index', index);
+    observer.observe(el);
+});
+
+document.querySelectorAll('.step-card, .pricing-card').forEach(el => {
     observer.observe(el);
 });
 
